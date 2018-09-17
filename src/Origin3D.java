@@ -27,18 +27,8 @@ public class Origin3D extends Application {
 	private final double cameraYlimit = 15;
 	private final double rotateModifier = 25;
 
-	@Override
-	public void start(Stage primaryStage) {
-		// Step 1a: Build your Scene and Camera
-		Group sceneRoot = new Group();
-		Scene scene = new Scene(sceneRoot, sceneWidth, sceneHeight);
-		scene.setFill(Color.BLACK);
-		PerspectiveCamera camera = new PerspectiveCamera(true);
-		camera.setNearClip(0.1);
-		camera.setFarClip(10000.0);
-		camera.setTranslateZ(-1000);
-		scene.setCamera(camera);
-
+	
+	Group getOrigin(double originAxisLength) {
 		final PhongMaterial blueMaterial = new PhongMaterial();
 		blueMaterial.setDiffuseColor(Color.DARKBLUE);
 		blueMaterial.setSpecularColor(Color.BLUE);
@@ -52,29 +42,23 @@ public class Origin3D extends Application {
 		redMaterial.setSpecularColor(Color.RED);
 		
 		
-		double originAxisLength=100;
-		//Step 1b: Add a primitive
-		final Cylinder originAxisY = new Cylinder(5, originAxisLength);
-		
-		originAxisY.setMaterial(blueMaterial);
-		//End Step 1b
-		//Step 1c: Translate and Rotate primitive into position
-		originAxisY.setTranslateY(0.5*originAxisLength);
-		originAxisY.setRotationAxis(Rotate.X_AXIS);
-//		cylinder.setRotate(45);
-//		originAxisX.setTranslateZ(-200);
-		//End Step 1c		
 		
 
 		final Cylinder originAxisX = new Cylinder(5, originAxisLength);
 		originAxisX.setMaterial(greenMaterial);
-		originAxisX.setTranslateX(0.5*originAxisLength);
+//		originAxisX.setTranslateX(0.5*originAxisLength);
+//		originAxisX.setTranslateY(0.5*originAxisLength);
 		originAxisX.setRotationAxis(Rotate.Z_AXIS);
 		originAxisX.setRotate(90);
 
+		final Cylinder originAxisY = new Cylinder(5, originAxisLength);
+		originAxisY.setMaterial(blueMaterial);
+		originAxisY.setTranslateY(0.5*originAxisLength);
+		
 		final Cylinder originAxisZ = new Cylinder(5, originAxisLength);
 		originAxisZ.setMaterial(redMaterial);
-		originAxisZ.setTranslateZ(0.5*originAxisLength);
+//		originAxisZ.setTranslateZ(0.5*originAxisLength);
+//		originAxisZ.setTranslateY(0.5*originAxisLength);
 		originAxisZ.setRotationAxis(Rotate.X_AXIS);
 		originAxisZ.setRotate(90);
 		
@@ -83,11 +67,35 @@ public class Origin3D extends Application {
 		//End Step 1d
 
 		//Step 1e: All Together Now: Grouped Primitives
-		Group primitiveGroup = new Group(originAxisX,originAxisY,originAxisZ);
-		primitiveGroup.setRotationAxis(Rotate.Z_AXIS);
-//		primitiveGroup.setRotate(180); //Rotate the Group as a whole
-		sceneRoot.getChildren().addAll(primitiveGroup);
-		//End Step 1e
+		return new Group(originAxisX,originAxisY,originAxisZ);
+		 
+	}
+	
+	@Override
+	public void start(Stage primaryStage) {
+		// Step 1a: Build your Scene and Camera
+		Group sceneRoot = new Group();
+		Scene scene = new Scene(sceneRoot, sceneWidth, sceneHeight);
+		scene.setFill(Color.BLACK);
+		PerspectiveCamera camera = new PerspectiveCamera(true);
+		camera.setNearClip(0.1);
+		camera.setFarClip(10000.0);
+		camera.setTranslateZ(-1000);
+		scene.setCamera(camera);
+
+		Group origin = getOrigin(100);
+		Group origin2 = getOrigin(50);
+		Group origin3 = getOrigin(50);
+		
+		
+		sceneRoot.getChildren().addAll(origin,origin2,origin3);
+//		sceneRoot.getChildren().addAll(origin);
+		
+		origin2.setRotationAxis(Rotate.Z_AXIS);
+		origin2.setRotate(0); //Rotate the Group as a whole
+
+		origin3.setRotationAxis(Rotate.Z_AXIS);
+		origin3.setRotate(10); //Rotate the Group as a whole
 		
 		primaryStage.setTitle("SimpleScene3D");
 		primaryStage.setScene(scene);
